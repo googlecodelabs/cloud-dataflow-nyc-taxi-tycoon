@@ -1,0 +1,162 @@
+/**
+ * Copyright 2016 Google Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0
+}
+
+#container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+#dashboard {
+    padding: 2px;
+    font-family: sans-serif;
+    width: 213px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+}
+.uiblock {
+    margin: 2px;
+    padding: 3px;
+    background-color: #EEEEEE;
+}
+.uiblock button {
+    width: 100%;
+    margin-top:2px;
+    margin-bottom:2px;
+}
+.uiblock select {
+    width: 100%;
+    margin-top:2px;
+    margin-bottom:2px;
+    text-align-last: center;
+}
+.uiblock .title {
+    color: grey;
+}
+#map {
+    flex: 1;
+}
+
+.flex-spacer {
+    flex: 1;
+}
+
+.error {
+    color: red;
+}
+
+#clock {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+#clockcircle {
+    fill: none;
+    stroke-width: 3;
+    stroke: grey;
+}
+
+#hourhand {
+    stroke: black;
+    stroke-width: 6;
+    stroke-linecap: round;
+    transition: 0.3s;
+}
+
+#minutehand {
+    stroke: black;
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: 0.3s;
+}
+
+#secondhand {
+    stroke: red;
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition: 0.3s;
+}
+
+#clock .tick {
+    stroke: grey;
+}
+
+#handpin {
+    fill: orange;
+}
+
+#date-rect {
+    stroke: #D8D8D8;
+    fill: #F8F8F8;
+}
+
+#missingdata-block {
+    /*display: none;*/
+}
+canvas#missingdata {
+    border: 1px solid lightgray;
+    margin-top: 2px;
+    margin-bottom: -3px;
+}
+
+#data-status {
+    min-height: 2em;
+    display: flex;
+    flex-direction: column;
+}
+#pubsub .msg {
+    font-size: 70%;
+    margin-top:2px;
+    margin-bottom:2px;
+}
+.msg {
+    font-size: small;
+    text-align: center;
+}
+.dol {
+    text-align: right;
+    padding-right: 1em;
+    font-family: monospace;
+    font-size: 120%;
+}
+#exact-dollar-display-block {
+    flex: 1;
+    min-height: 3em;
+    overflow-y: auto;
+}
+#exact-dollar-display {
+    color: black;
+}
+#exact-dollar-display .incomplete {
+    font-size: smaller;
+    color: grey;
+}
+#exact-dollar-display .corrected {
+    color: red;
+}
+#project-selection, #pubsub-topic-selection, #start-fetching-button, #stop-fetching-button {
+    display: none;
+}

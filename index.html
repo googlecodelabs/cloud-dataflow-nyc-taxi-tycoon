@@ -1,0 +1,114 @@
+<!--
+ Copyright 2016 Google Inc.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<!--
+This visualiser polls PubSub for new data points concurrently.
+If PubSub acks are late and PubSub starts resending the same points
+the visualiser will detect it and start outputting warnings in console.log
+It is however  hard to overload. More likely, if too much processing is going on,
+both the map update rate and the effective PubSub poll rate will drop and PubSub
+will accumulate a backlog.
+-->
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>NYC Taxi Tycoon - Dataflow Codelab Visualizer</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- utility class declarations -->
+    <script src="slidingset.js"></script>
+
+    <!-- configuration and global variables -->
+    <script src="config.js"></script>
+    <script src="globals.js"></script>
+
+    <!-- angular js minified -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+
+    <!-- Google API scripts -->
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDD2NlEXV-Cp3w148ZpPFGwl8Buhw9dxF4&signed_in=true&libraries=visualization,geometry&callback=initMap"></script>
+    <script defer src="https://apis.google.com/js/api.js?onload=handleClientLoad"></script>
+    <script src="googleapiaccess.js"></script>
+
+    <!-- application scripts, need DOM ready -->
+    <script defer src="dashboard.js"></script>
+    <script defer src="datastatus.js"></script>
+    <script defer src="clock.js"></script>
+    <script defer src="recurrenttasks.js"></script>
+    <script defer src="taxiridesfeed.js"></script>
+    <!--
+        TODO: implements a time-based refresh of the map, rather than the current refresh at each PubSub request
+     -->
+</head>
+
+<body>
+
+    <div id="container">
+        <div id="dashboard" ng-app="TaxiRidesVisualizer" ng-controller="ProjectTopicsController">
+            <div class="uiblock" id="pubsub">
+                <div class="title">PubSub</div>
+                <button id="authorize-button" ng-click="authorize()" style="display: none;">Authorize</button>
+                <button id="signout-button" ng-click="signout()" style="display: none;">Sign Out</button>
+                <select id="project-selection" ng-model="selectedProject" ng-options="p.projectId for p in projects" ng-change="projectSelected()">
+                    <option value="">Please select a project</option>
+                </select>
+                <select id="pubsub-topic-selection" ng-model="selectedTopic" ng-options="t.name for t in topics" ng-change="topicSelected()">
+                    <option value="">Please select a topic</option>
+                </select>
+                <button id="start-fetching-button" ng-click="startFetching()">Start FetchingRides</button>
+                <button id="stop-fetching-button" ng-click="stopFetching()">Stop Fetching Rides</button>
+                <div class="msg" ng-bind="pubsub_status"></div>
+            </div>
+            <div class="uiblock">
+                <div class="title">Data time</div>
+                <div id="clock" onload="setNumbers">
+                    <svg viewBox="-100 -100 200 200">
+                        <rect id="date-rect" width="10.6ex" height="1.1em" x="-5.3ex" y="0.55em"></rect>
+                        <text id="date-text" y="1.5em" text-anchor="middle">1970-01-01</text>
+                        <line id="hourhand" x1="0" y1="0" x2="0" y2="-40" />
+                        <line id="minutehand" x1="0" y1="0" x2="0" y2="-65" />
+                        <line id="secondhand" x1="0" y1="0" x2="0" y2="-60" />
+                        <circle id="clockcircle" r="80"/>
+                        <circle id="handpin" r="3"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="uiblock">
+                <div class="title">Runrate ($/min)</div>
+                <div id="dollar-display" class="dol">$0</div>
+            </div>
+            <div class="uiblock" id="exact-dollar-display-block">
+                <div class="title">Exact turnover ($/min)</div>
+                <div class="dol">
+                    <div id="exact-dollar-display"></div>
+                </div>
+            </div>
+            <div class="uiblock" id="missingdata-block">
+                <div class="title">Running taxis</div>
+                <canvas id="missingdata" width="200" height="200" style="width: 200px; height: 200px;"></canvas>
+            </div>
+            <div id="data-status" class="uiblock">
+                <div class="flex-spacer"></div>
+                <div class="msg"></div>
+                <div class="flex-spacer"></div>
+            </div>
+        </div>
+        <div id="map"></div>
+    </div>
+</body>
+
+</html>
