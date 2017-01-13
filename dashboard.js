@@ -46,8 +46,7 @@ function updateExactDollars(amount, id, timing) {
     var existing = queryIfDisplayed("#exact-dollar-display div#windowhash-" + id)
     if (existing) {
         setExactDollarNode(existing, amount, id, timing)
-    }
-    else {
+    } else {
         var node = queryIfDisplayed("#exact-dollar-display")
         if (node) {
             var newval = document.createElement("div")
@@ -66,15 +65,13 @@ function setExactDollarNode(node, amount, id, timing) {
     if (timing == "EARLY") {
         node.className = "incomplete"
         message = "(processing)"
-    }
-    else if (timing == "ON_TIME") {
+    } else if (timing == "ON_TIME") {
         node.className = ""
-    }
-    else if (timing == "LATE") {
+    } else if (timing == "LATE") {
         node.className = "corrected"
         message = "(updated)"
     }
-    node.innerText = message + " "+ formatDollars(amount)
+    node.innerText = message + " " + formatDollars(amount)
 }
 
 function queryIfDisplayed(id) {
@@ -92,7 +89,7 @@ function queryIfDisplayed(id) {
 }
 
 function formatDollars(amount) {
-    return amount.toLocaleString("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0})
+    return amount.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
 }
 
 setDataStatus(DATA_STATUS_ZERO)
@@ -117,6 +114,12 @@ function setStartStopButton(val) {
         startFetchingRidesButton.style.display = 'none';
         stopFetchingRidesButton.style.display = 'none';
     }
+}
+
+function sortByName(o1, o2) {
+    if (o1.name.toLowerCase() > o2.name.toLowerCase()) return 1;
+    if (o2.name.toLowerCase() > o1.name.toLowerCase()) return -1;
+    return 0;
 }
 
 var app = angular.module('TaxiRidesVisualizer', []);
@@ -158,7 +161,7 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
                         PUBSUB_SUBSCRIPTION = response.result.name;
                         startPullingFromPubSub();
                         setStartStopButton("stop")
-                        //$scope.pubsub_status = "Fetching rides...";
+                            //$scope.pubsub_status = "Fetching rides...";
                         $scope.pubsub_status = "";
                         $scope.$apply();
                     }
@@ -190,7 +193,7 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
             }
             $scope.$apply();
         }).then(projectsService.getProjects).then(function(projects) {
-            $scope.projects = projects;
+            $scope.projects = projects.sort(sortByName);
             projectsSelect.style.display = 'block';
             $scope.pubsub_status = '';
             $scope.$apply();
@@ -201,13 +204,13 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
         $scope.loadTopics();
     };
 
-    $scope.loadTopics = function () {
+    $scope.loadTopics = function() {
         //$scope.status_active = true;
         if ($scope.selectedProject != null) {
             $scope.pubsub_status = 'Loading topics...';
             topicsService.getTopics($scope.selectedProject.projectId).then(
-                function (topics) {
-                    $scope.topics = topics;
+                function(topics) {
+                    $scope.topics = topics.sort(sortByName);
                     if (topics.length > 0) {
                         topicsSelect.style.display = 'block';
                         $scope.pubsub_status = '';
