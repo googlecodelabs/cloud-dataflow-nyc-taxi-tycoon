@@ -234,7 +234,13 @@ app.factory('projectsService', function($q) {
                 if (auth2.isSignedIn.get()) {
                     var request = crm.projects.list({ pageSize: 1000 })
                     request.execute(function(resp) {
-                        deferred.resolve(resp.projects)
+                        projects = []
+                        resp.projects.forEach(function(p) {
+                            if (p.lifecycleState === "ACTIVE") {
+                                projects.push(p)
+                            }
+                        });
+                        deferred.resolve(projects)
                     })
                 }
             })
