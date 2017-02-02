@@ -75,7 +75,7 @@ function initPubSub() {
 }
 
 function loadCloudResourceManager() {
-    return gapi.client.load('cloudresourcemanager', 'v1beta1')
+    return gapi.client.load('cloudresourcemanager', 'v1')
 }
 
 function initCloudResourceManager() {
