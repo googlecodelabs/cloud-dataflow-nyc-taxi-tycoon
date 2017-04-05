@@ -199,13 +199,11 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
             $scope.$apply();
         });
     };
-    $scope.loadProjects();
     $scope.projectSelected = function() {
         $scope.loadTopics();
     };
 
-    $scope.loadTopics = function(next) {
-        //$scope.status_active = true;
+    $scope.loadTopics = function() {
         if ($scope.selectedProject != null) {
             $scope.pubsub_status = 'Loading topics...';
             topicsService.getTopics($scope.selectedProject.projectId).then(
@@ -247,6 +245,7 @@ app.factory('projectsService', function($q) {
                             if (resp.nextPageToken) {
                                 fetchProjects(resp.nextPageToken)
                             } else {
+                                console.log("Loaded " + projects.length + " project(s)")
                                 deferred.resolve(projects)
                             }
                         })
