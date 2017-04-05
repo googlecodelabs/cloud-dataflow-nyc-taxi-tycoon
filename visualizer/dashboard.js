@@ -231,7 +231,7 @@ app.factory('projectsService', function($q) {
             authPromise.then(function() {
                 if (auth2.isSignedIn.get()) {
                     function fetchProjects(nextPageToken) {
-                        var request = crm.projects.list({ pageSize: 10, pageToken: nextPageToken })
+                        var request = crm.projects.list({ pageSize: 1000, pageToken: nextPageToken })
                         request.execute(function(resp) {
                             resp.projects.forEach(function(p) {
                                 if (p.lifecycleState === "ACTIVE") {
@@ -239,7 +239,6 @@ app.factory('projectsService', function($q) {
                                 }
                             });
                             if (resp.nextPageToken) {
-                                console.log('fetch next batch with pageToken ' + resp.nextPageToken)
                                 fetchProjects(resp.nextPageToken)
                             } else {
                                 deferred.resolve(projects)
