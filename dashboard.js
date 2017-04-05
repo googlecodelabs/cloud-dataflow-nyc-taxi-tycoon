@@ -199,13 +199,11 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
             $scope.$apply();
         });
     };
-    $scope.loadProjects();
     $scope.projectSelected = function() {
         $scope.loadTopics();
     };
 
     $scope.loadTopics = function() {
-        //$scope.status_active = true;
         if ($scope.selectedProject != null) {
             $scope.pubsub_status = 'Loading topics...';
             topicsService.getTopics($scope.selectedProject.projectId).then(
@@ -233,18 +231,26 @@ app.factory('projectsService', function($q) {
     return {
         getProjects: function() {
             var deferred = $q.defer();
+            projects = []
             authPromise.then(function() {
                 if (auth2.isSignedIn.get()) {
-                    var request = crm.projects.list({ pageSize: 1000 })
-                    request.execute(function(resp) {
-                        projects = []
-                        resp.projects.forEach(function(p) {
-                            if (p.lifecycleState === "ACTIVE") {
-                                projects.push(p)
+                    function fetchProjects(nextPageToken) {
+                        var request = crm.projects.list({ pageSize: 1000, pageToken: nextPageToken })
+                        request.execute(function(resp) {
+                            resp.projects.forEach(function(p) {
+                                if (p.lifecycleState === "ACTIVE") {
+                                    projects.push(p)
+                                }
+                            });
+                            if (resp.nextPageToken) {
+                                fetchProjects(resp.nextPageToken)
+                            } else {
+                                console.log("Loaded " + projects.length + " project(s)")
+                                deferred.resolve(projects)
                             }
-                        });
-                        deferred.resolve(projects)
-                    })
+                        })
+                    }
+                    fetchProjects('')
                 }
             })
             return deferred.promise;
