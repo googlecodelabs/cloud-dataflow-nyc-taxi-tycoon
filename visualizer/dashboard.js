@@ -46,8 +46,7 @@ function updateExactDollars(amount, id, timing) {
     var existing = queryIfDisplayed("#exact-dollar-display div#windowhash-" + id)
     if (existing) {
         setExactDollarNode(existing, amount, id, timing)
-    }
-    else {
+    } else {
         var node = queryIfDisplayed("#exact-dollar-display")
         if (node) {
             var newval = document.createElement("div")
@@ -66,15 +65,13 @@ function setExactDollarNode(node, amount, id, timing) {
     if (timing == "EARLY") {
         node.className = "incomplete"
         message = "(processing)"
-    }
-    else if (timing == "ON_TIME") {
+    } else if (timing == "ON_TIME") {
         node.className = ""
-    }
-    else if (timing == "LATE") {
+    } else if (timing == "LATE") {
         node.className = "corrected"
         message = "(updated)"
     }
-    node.innerText = message + " "+ formatDollars(amount)
+    node.innerText = message + " " + formatDollars(amount)
 }
 
 function queryIfDisplayed(id) {
@@ -92,7 +89,7 @@ function queryIfDisplayed(id) {
 }
 
 function formatDollars(amount) {
-    return amount.toLocaleString("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0})
+    return amount.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
 }
 
 setDataStatus(DATA_STATUS_ZERO)
@@ -158,7 +155,7 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
                         PUBSUB_SUBSCRIPTION = response.result.name;
                         startPullingFromPubSub();
                         setStartStopButton("stop")
-                        //$scope.pubsub_status = "Fetching rides...";
+                            //$scope.pubsub_status = "Fetching rides...";
                         $scope.pubsub_status = "";
                         $scope.$apply();
                     }
@@ -201,12 +198,12 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
         $scope.loadTopics();
     };
 
-    $scope.loadTopics = function () {
+    $scope.loadTopics = function() {
         //$scope.status_active = true;
         if ($scope.selectedProject != null) {
             $scope.pubsub_status = 'Loading topics...';
             topicsService.getTopics($scope.selectedProject.projectId).then(
-                function (topics) {
+                function(topics) {
                     $scope.topics = topics;
                     if (topics.length > 0) {
                         topicsSelect.style.display = 'block';
@@ -232,16 +229,24 @@ app.factory('projectsService', function($q) {
             var deferred = $q.defer();
             authPromise.then(function() {
                 if (auth2.isSignedIn.get()) {
-                    var request = crm.projects.list({ pageSize: 1000 })
-                    request.execute(function(resp) {
-                        projects = []
-                        resp.projects.forEach(function(p) {
-                            if (p.lifecycleState === "ACTIVE") {
-                                projects.push(p)
-                            }
-                        });
-                        deferred.resolve(projects)
-                    })
+                    nextPageToken = 'first'
+                    projects = []
+                    while (nextPageToken.length > 0) {
+                        if (nextPageToken === 'first') {
+                            nextPageToken = ''
+                        }
+                        var request = crm.projects.list({ pageSize: 1000, pageToken: nextPageToken })
+                        request.execute(function(resp) {
+                            nextPageToken = resp.nextPageToken
+                            resp.projects.forEach(function(p) {
+                                if (p.lifecycleState === "ACTIVE") {
+                                    projects.push(p)
+                                }
+                            });
+
+                            deferred.resolve(projects)
+                        })
+                    }
                 }
             })
             return deferred.promise;
