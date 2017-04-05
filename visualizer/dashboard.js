@@ -198,7 +198,7 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
         $scope.loadTopics();
     };
 
-    $scope.loadTopics = function() {
+    $scope.loadTopics = function(next) {
         //$scope.status_active = true;
         if ($scope.selectedProject != null) {
             $scope.pubsub_status = 'Loading topics...';
@@ -227,26 +227,26 @@ app.factory('projectsService', function($q) {
     return {
         getProjects: function() {
             var deferred = $q.defer();
+            projects = []
             authPromise.then(function() {
                 if (auth2.isSignedIn.get()) {
-                    nextPageToken = 'first'
-                    projects = []
-                    while (nextPageToken.length > 0) {
-                        if (nextPageToken === 'first') {
-                            nextPageToken = ''
-                        }
-                        var request = crm.projects.list({ pageSize: 1000, pageToken: nextPageToken })
+                    function fetchProjects(nextPageToken) {
+                        var request = crm.projects.list({ pageSize: 10, pageToken: nextPageToken })
                         request.execute(function(resp) {
-                            nextPageToken = resp.nextPageToken
                             resp.projects.forEach(function(p) {
                                 if (p.lifecycleState === "ACTIVE") {
                                     projects.push(p)
                                 }
                             });
-
-                            deferred.resolve(projects)
+                            if (resp.nextPageToken) {
+                                console.log('fetch next batch with pageToken ' + resp.nextPageToken)
+                                fetchProjects(resp.nextPageToken)
+                            } else {
+                                deferred.resolve(projects)
+                            }
                         })
                     }
+                    fetchProjects('')
                 }
             })
             return deferred.promise;
