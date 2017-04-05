@@ -116,6 +116,12 @@ function setStartStopButton(val) {
     }
 }
 
+function sortByName(o1, o2) {
+    if (o1.name.toLowerCase() > o2.name.toLowerCase()) return 1;
+    if (o2.name.toLowerCase() > o1.name.toLowerCase()) return -1;
+    return 0;
+}
+
 var app = angular.module('TaxiRidesVisualizer', []);
 app.controller('ProjectTopicsController', function($scope, $timeout, projectsService, topicsService) {
     $scope.authorize = function() {
@@ -187,7 +193,7 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
             }
             $scope.$apply();
         }).then(projectsService.getProjects).then(function(projects) {
-            $scope.projects = projects;
+            $scope.projects = projects.sort(sortByName);
             projectsSelect.style.display = 'block';
             $scope.pubsub_status = '';
             $scope.$apply();
@@ -204,7 +210,7 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
             $scope.pubsub_status = 'Loading topics...';
             topicsService.getTopics($scope.selectedProject.projectId).then(
                 function(topics) {
-                    $scope.topics = topics;
+                    $scope.topics = topics.sort(sortByName);
                     if (topics.length > 0) {
                         topicsSelect.style.display = 'block';
                         $scope.pubsub_status = '';
