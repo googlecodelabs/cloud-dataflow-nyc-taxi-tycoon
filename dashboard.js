@@ -159,13 +159,6 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
         pubsub.projects.subscriptions
             .delete({ subscription: 'projects/' + projectId + '/subscriptions/' + PUBSUB_SUBSCRIPTION_NAME })
             .then(
-                function(response) {
-                    if (response.status != 200 && response != 404) {
-                        console.log(response)
-                    }
-                }
-            )
-            .then(
                 createTopicPrFn, createTopicPrFn
             ).then(
                 function(response) {
@@ -192,13 +185,6 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
         };
         pubsub.projects.subscriptions
             .delete({ subscription: 'projects/' + projectId + '/subscriptions/' + PUBSUB_SUBSCRIPTION_NAME })
-            .then(
-                function(response) {
-                    if (response.status != 200 && response != 404) {
-                        console.log(response)
-                    }
-                }
-            )
             .then(clearStatusFn, clearStatusFn);
     };
 
