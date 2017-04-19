@@ -117,8 +117,13 @@ function setStartStopButton(val) {
 }
 
 function sortByName(o1, o2) {
-    if (o1.name.toLowerCase() > o2.name.toLowerCase()) return 1;
-    if (o2.name.toLowerCase() > o1.name.toLowerCase()) return -1;
+    if ('name' in o1 && 'name' in o2) {
+        if (o1.name.toLowerCase() > o2.name.toLowerCase()) return 1;
+        if (o2.name.toLowerCase() > o1.name.toLowerCase()) return -1;
+    } else if ('projectId' in o1 && 'projectId' in o2) {
+        if (o1.projectId.toLowerCase() > o2.projectId.toLowerCase()) return 1;
+        if (o2.projectId.toLowerCase() > o1.projectId.toLowerCase()) return -1;
+    }
     return 0;
 }
 
@@ -206,8 +211,15 @@ app.controller('ProjectTopicsController', function($scope, $timeout, projectsSer
     $scope.loadTopics = function() {
         if ($scope.selectedProject != null) {
             $scope.pubsub_status = 'Loading topics...';
+
             topicsService.getTopics($scope.selectedProject.projectId).then(
                 function(topics) {
+                    // add public pubsub topic to subscribe to directly
+                    topic = {
+                        id: 'projects/pubsub-public-data/topics/taxirides-realtime',
+                        name: "## public taxirides-realtime topic ##"
+                    }
+                    topics.push(topic)
                     $scope.topics = topics.sort(sortByName);
                     if (topics.length > 0) {
                         topicsSelect.style.display = 'block';
