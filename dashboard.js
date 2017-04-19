@@ -117,10 +117,10 @@ function setStartStopButton(val) {
 }
 
 function sortByName(o1, o2) {
-    if (name in o1 && name in o2) {
+    if ('name' in o1 && 'name' in o2) {
         if (o1.name.toLowerCase() > o2.name.toLowerCase()) return 1;
         if (o2.name.toLowerCase() > o1.name.toLowerCase()) return -1;
-    } else if (projectId in o1 && projectId in o2) {
+    } else if ('projectId' in o1 && 'projectId' in o2) {
         if (o1.projectId.toLowerCase() > o2.projectId.toLowerCase()) return 1;
         if (o2.projectId.toLowerCase() > o1.projectId.toLowerCase()) return -1;
     }
