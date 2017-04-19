@@ -63,7 +63,7 @@ will accumulate a backlog.
                 <div class="title">PubSub</div>
                 <button id="authorize-button" ng-click="authorize()" style="display: none;">Authorize</button>
                 <button id="signout-button" ng-click="signout()" style="display: none;">Sign Out</button>
-                <select id="project-selection" ng-model="selectedProject" ng-options="p.projectId for p in projects" ng-change="projectSelected()">
+                <select id="project-selection" ng-model="selectedProject" ng-options="p.name for p in projects" ng-change="projectSelected()">
                     <option value="">Please select a project</option>
                 </select>
                 <select id="pubsub-topic-selection" ng-model="selectedTopic" ng-options="t.name for t in topics" ng-change="topicSelected()">
