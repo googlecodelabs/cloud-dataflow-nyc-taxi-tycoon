@@ -29,7 +29,7 @@ Finally, delete the test subscription using
 
 In the [dataflow](dataflow/) folder you find the solutions for all dataflow pipelines covered in the [NYC Taxi Tycoon Dataflow Codelab](https://gcplab.me/codelabs/cloud-dataflow-nyc-taxi-tycoon) 
 
-The [visualizer](googlecodelabs/cloud-dataflow-nyc-taxi-tycoon/tree/gh-pages/) code to display the output of your 
+The [visualizer](https://github.com/googlecodelabs/cloud-dataflow-nyc-taxi-tycoon/tree/gh-pages) code to display the output of your 
 codelab dataflow pipelines can be found in the `gh-pages` branch. The visualizer is available hosted [here](https://googlecodelabs.github.io/cloud-dataflow-nyc-taxi-tycoon).
 
 *Use: The NYC Taxi & Limousine Commission’s dataset is publicly available for anyone to use under the following terms 
