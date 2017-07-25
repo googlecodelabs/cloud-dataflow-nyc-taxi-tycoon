@@ -89,7 +89,7 @@ function queryIfDisplayed(id) {
 }
 
 function formatDollars(amount) {
-    return amount.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
+    return amount.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 })
 }
 
 setDataStatus(DATA_STATUS_ZERO)
